@@ -141,7 +141,7 @@ class ContextRelevancyTemplate:
         """
 
     @staticmethod
-    def verdicts(information_needs: List[str], extracted_truths: List[str]):
+    def verdicts(information_needs: List[str], extracted_truths: list[dict]):
         return f"""You will be given:
             1. A list of INFORMATION NEEDS (each describing a specific question or factual requirement from the user query).
             2. A structured list of TRUTHS extracted from the retrieval context.

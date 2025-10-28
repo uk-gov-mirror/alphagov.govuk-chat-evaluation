@@ -10,6 +10,22 @@ class Verdict(BaseModel):
 class VerdictCollection(BaseModel):
     verdicts: List[Verdict]
 
+    def score_verdicts(self) -> float:
+        if len(self.verdicts) == 0:
+            return 1.0
+
+        quality_count = sum(1 for verdict in self.verdicts if verdict.verdict != "no")
+        return float(quality_count / len(self.verdicts))
+
+    def unmet_needs(self) -> List[str]:
+        unmet_needs: List[str] = []
+
+        for verdict in self.verdicts:
+            if verdict.verdict == "no" and verdict.reason:
+                unmet_needs.append(verdict.reason)
+
+        return unmet_needs
+
 
 class Truth(BaseModel):
     context: str
@@ -18,6 +34,15 @@ class Truth(BaseModel):
 
 class TruthCollection(BaseModel):
     truths: List[Truth]
+
+    def extracted_truths(self) -> list[dict]:
+        extracted_truths: list[dict] = []
+        for truth in self.truths:
+            if truth.facts:
+                truths: List[str] = []
+                truths.extend(truth.facts)
+                extracted_truths.append({"context": truth.context, "truths": truths})
+        return extracted_truths
 
 
 class InformationNeedsCollection(BaseModel):
